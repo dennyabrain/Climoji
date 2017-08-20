@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +25,22 @@ import butterknife.Optional;
  */
 
 public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiViewHolder> {
-    private List<String> fileNames;
+    private List<Integer> fileIds;
     private LayoutInflater mLayoutInflater;
     private Activity mActivity;
+    private Context mContext;
+
+    private final int CLIMOJI_NUM = 14;
 
     public ClimojiAdapter(Context context, Activity activity){
+        mContext = context;
         mActivity = activity;
         mLayoutInflater = LayoutInflater.from(context);
-        fileNames = new ArrayList<String>();
-        fileNames.add("Name 1");
-        fileNames.add("Name 2");
-        fileNames.add("Name 3");
-        fileNames.add("Name 4");
+        fileIds = new ArrayList<>();
+        for(int i=0;i<CLIMOJI_NUM;i++){
+            int picId = mActivity.getResources().getIdentifier("climoji_"+(i+1), "drawable", mActivity.getApplicationContext().getPackageName());
+            fileIds.add(picId);
+        }
     }
 
     @Override
@@ -46,13 +52,14 @@ public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiV
 
     @Override
     public void onBindViewHolder(ClimojiViewHolder holder, int position) {
-        String climojiName = fileNames.get(position);
-        holder.getClimojiLabel().setText(climojiName);
+        int drawableId = fileIds.get(position);
+        //holder.getClimojiLabel().setText(drawableId);
+        Picasso.with(mContext).load(fileIds.get(position)).into(holder.getClimojiImage());
     }
 
     @Override
     public int getItemCount() {
-        return fileNames.size();
+        return fileIds.size();
     }
 
     public class ClimojiViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
