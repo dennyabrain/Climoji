@@ -2,9 +2,12 @@ package dennymades.space.climoji;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,7 @@ import butterknife.Optional;
  */
 
 public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiViewHolder> {
+    private final String TAG = ClimojiAdapter.class.getSimpleName();
     private List<Integer> fileIds;
     private LayoutInflater mLayoutInflater;
     private Activity mActivity;
@@ -51,10 +55,18 @@ public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiV
     }
 
     @Override
-    public void onBindViewHolder(ClimojiViewHolder holder, int position) {
+    public void onBindViewHolder(ClimojiViewHolder holder, final int position) {
         int drawableId = fileIds.get(position);
         //holder.getClimojiLabel().setText(drawableId);
         Picasso.with(mContext).load(fileIds.get(position)).into(holder.getClimojiImage());
+
+        holder.getClimojiCardView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "clicked on "+position);
+                sendImage(position);
+            }
+        });
     }
 
     @Override
@@ -88,5 +100,16 @@ public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiV
         public TextView getClimojiLabel() {
             return climojiLabel;
         }
+    }
+
+    private void sendImage(int position){
+        String path = "android.resource://dennymades.space.climoji/drawable/climoji_"+(position+1);
+        Uri uriToImage = Uri.parse(path                                                                                                                                                                     );
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
+        shareIntent.setType("image/png");
+        mActivity.startActivity(Intent.createChooser(shareIntent, "Climoji"));
     }
 }
