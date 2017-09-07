@@ -60,7 +60,9 @@ public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiV
         //holder.getClimojiLabel().setText(drawableId);
         Picasso.with(mContext).load(fileIds.get(position)).into(holder.getClimojiImage());
 
-        holder.getClimojiCardView().setOnClickListener(new View.OnClickListener() {
+        final CardView climojiCardView = holder.getClimojiCardView();
+
+        climojiCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "clicked on "+position);
