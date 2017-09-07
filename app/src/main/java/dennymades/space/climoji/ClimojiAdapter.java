@@ -112,6 +112,6 @@ public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiV
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
         shareIntent.setType("image/png");
-        mActivity.startActivity(Intent.createChooser(shareIntent, "Climoji"));
+        mActivity.startActivityForResult(Intent.createChooser(shareIntent, "Climoji"), 200);
     }
 }
