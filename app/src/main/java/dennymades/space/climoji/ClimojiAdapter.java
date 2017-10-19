@@ -3,7 +3,9 @@ package dennymades.space.climoji;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -106,12 +108,22 @@ public class ClimojiAdapter extends RecyclerView.Adapter<ClimojiAdapter.ClimojiV
 
     private void sendImage(int position){
         String path = "android.resource://dennymades.space.climoji/drawable/climoji_"+(position+1);
-        Uri uriToImage = Uri.parse(path                                                                                                                                                                     );
+        Log.d(TAG, "path : "+path);
+        Uri uriToImage = Uri.parse(path);
+        Log.d(TAG, "uri : "+uriToImage.getPath());
 
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
-        shareIntent.setType("image/png");
-        mActivity.startActivityForResult(Intent.createChooser(shareIntent, "Climoji"), 200);
+        int picId = mActivity.getResources().getIdentifier("climoji_"+(position+1), "drawable", mActivity.getApplicationContext().getPackageName());
+        Uri imageUri;
+        try {
+            imageUri = Uri.parse(MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
+                    BitmapFactory.decodeResource(mContext.getResources(), picId), null, null));
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            shareIntent.setType("image/png");
+            mActivity.startActivityForResult(Intent.createChooser(shareIntent, "Climoji"), 200);
+        } catch (NullPointerException e) {
+            Log.d(TAG, "error creating intent ",e);
+        }
     }
 }
