@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private ClimojiAdapter climojiAdapter;
 
-    private final int WRITE_PERMISSION = 100;
+    private final int WRITE_PERMISSION = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
